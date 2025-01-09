@@ -37,5 +37,3 @@ module.exports = {
   adminAuth,
   userAuth,
 };
-
-//mongodb+srv://tanujkathuriakathuria:GWGph8nRLK6d9fxN@developersworld.dtykzv9.mongodb.net/
