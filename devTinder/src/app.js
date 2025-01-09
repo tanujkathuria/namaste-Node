@@ -1,5 +1,5 @@
 const express = require("express");
-const { adminAuth } = require("./middlewares/auth");
+const { adminAuth, userAuth } = require("./middlewares/auth");
 const connectDb = require("./config/database");
 const app = express();
 const UserModel = require("./model/user");
@@ -7,7 +7,6 @@ const { validateSignUpData } = require("./utils/validation");
 const bcrypt = require("bcrypt");
 const validator = require("validator");
 const cookieParser = require("cookie-parser");
-var jwt = require("jsonwebtoken");
 
 connectDb()
   .then(() => {
@@ -170,14 +169,11 @@ app.post("/login", async (req, res) => {
     const { emailId, password } = req.body;
     if (!validator.isEmail(emailId)) throw new Error("invalid credentials");
     const user = await UserModel.findOne({ emailId: emailId });
-    console.log(user);
     if (!user) throw new Error("invalid credentials");
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(isPasswordValid);
+    const isPasswordValid = await user.validatePassword(password);
     if (isPasswordValid) {
       // create a token based on the user id
-      const token = await jwt.sign({ _id: user._id }, "secretkey");
-      console.log(token);
+      const token = await user.getJWT();
       // add the token to cookie and send the response back to the user
       res.cookie("token", token);
       res.send("login is successful");
@@ -187,18 +183,17 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const cookies = req.cookies;
-    const { token } = cookies;
-    // validate my token
-    console.log(token);
-    const { _id } = await jwt.verify(token, "secretkey");
-    console.log("logged in user is" + _id);
-    const user = await UserModel.findOne({ _id: _id });
+    const user = req.user;
     if (!user) res.send("user does not exist");
     res.send("profile successful " + user);
   } catch (err) {
     res.status(400).send("error has occured" + err);
   }
+});
+
+app.post("/sendConnectionRequest", userAuth, async (req, res) => {
+  const user = req.user;
+  res.send(user.firstName + " send connection request");
 });
