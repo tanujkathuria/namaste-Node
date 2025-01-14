@@ -48,4 +48,13 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// let the user log out even he is not logged in
+// sending the null back in the token which expires just now
+router.post("/logout", async (req, res) => {
+  res.cookie("token", null, {
+    expires: new Date(Date.now()),
+  });
+  res.send("user has logged out now");
+});
+
 module.exports = router;

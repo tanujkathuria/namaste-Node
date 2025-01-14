@@ -1,10 +1,11 @@
 const express = require("express");
 const UserModel = require("../model/user");
 const { adminAuth, userAuth } = require("../middlewares/auth");
+const { validateEditProfileData } = require("../utils/validation");
 
 const router = express.Router();
 
-router.get("/profile", userAuth, async (req, res) => {
+router.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
     if (!user) res.send("user does not exist");
@@ -13,6 +14,28 @@ router.get("/profile", userAuth, async (req, res) => {
     res.status(400).send("error has occured" + err);
   }
 });
+
+// update the profile
+router.patch("/profile/edit", userAuth, async (req, res) => {
+  try {
+    // validate the profile of the user
+    if (!validateEditProfileData(req)) {
+      res.status(400).send("invalid profile data");
+    }
+    const user = req.user;
+    console.log(user);
+    console.log(req.body);
+    Object.keys(req.body).forEach((field) => (user[field] = req.body[field])); // run for each of the keys
+    console.log(user);
+    await user.save();
+    res.send("user data has been updated successfully");
+    if (!user) res.send("user does not exist");
+  } catch (err) {
+    res.status(400).send("error has occured" + err);
+  }
+});
+
+// write down the api fr the forgot password scenario
 
 // fetch all the records from the database
 router.get("/feed", async (req, res) => {
