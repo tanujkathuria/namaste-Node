@@ -2,7 +2,6 @@ var jwt = require("jsonwebtoken");
 const User = require("../model/user");
 
 const adminAuth = (req, res, next) => {
-  console.log("admin auth is gettng called");
   const token = "xyzaa";
   const isAdminAuthorized = token === "xyz";
   if (isAdminAuthorized) next();
@@ -23,7 +22,6 @@ const userAuth = async (req, res, next) => {
     const decodedObj = await jwt.verify(token, "secretkey"); // this secret key will come from the env file in the future
     const { _id } = decodedObj;
     const user = await User.findOne({ _id: _id });
-    console.log(user);
     req.user = user;
     if (!user) res.status(401).send("user is not found");
     else next();

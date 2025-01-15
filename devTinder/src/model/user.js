@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       minLength: 4,
-      maxLength: 50,
+      maxLength: 50, // either set it as unique or set index=true for creating the index for the find and search
     },
     lastName: {
       type: String,
@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema(
     emailId: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, // automatically creates index for the same if the column is unique
       validate(value) {
         if (!validator.isEmail(value)) {
           throw new Error("email is not valid boss");
