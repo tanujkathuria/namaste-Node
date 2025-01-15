@@ -1,8 +1,8 @@
 const express = require("express");
 const UserModel = require("../model/user");
 const { adminAuth, userAuth } = require("../middlewares/auth");
-const { ConnectionRequestModel } = require("../model/connectionRequest");
-
+const ConnectionRequestModel = require("../model/connectionRequest");
+const mongoose = require("mongoose");
 const router = express.Router();
 
 router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
@@ -52,5 +52,46 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
     res.status(400).send("some error has occured" + err);
   }
 });
+
+router.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+      const status = req.params.status;
+      const requestId = req.params.requestId;
+      console.log(requestId);
+      console.log(loggedInUser);
+      // validate the status is either accepted or rejected
+      const ALLOWED_STATUS = ["accepted", "rejected"];
+      if (!ALLOWED_STATUS.includes(status)) {
+        return res.status(400).send("this status is not allowed");
+      }
+      // validate the request id should not be invalid / present in the db
+      // John is sending the connecton request to the Mukesh Ambani
+      // check if the toUserId is the logged in user
+      // exiting status should be interested
+      const connectionRequest = await ConnectionRequestModel.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      console.log(connectionRequest);
+      if (!connectionRequest) {
+        return res.status(400).send("this request id not valid");
+      }
+      connectionRequest.status = "accepted";
+      console.log(connectionRequest);
+      const data = await connectionRequest.save();
+      res.json({
+        message: "connection request has been accepted",
+        data: data,
+      });
+    } catch (err) {
+      res.status(400).send("some error has occured" + err);
+    }
+  }
+);
 
 module.exports = router;
