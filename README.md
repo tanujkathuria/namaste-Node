@@ -1,6 +1,7 @@
 # Namaste Node 
 
 ## All the APIs needed 
+
 # authRouter 
 
 POST / signup 
@@ -16,19 +17,22 @@ GET / profile/view
 connectionRequestRouter 
 
 # send request on the sender side 
+
 Status : ignore, interested, accepted, rejected 
 POST /request/send/interested/:userId
 POST /request/send/ignored/:userId
 /request/send/:status/:userId
+
 # review requests on the receiver end 
+
 /request/review/:status/:userId
 POST /request/review/accepted/:requestId
 POST /request/review/rejected/:requestId
 
 # userRouter
 
-GET /connections
-GET / requests/received
+GET /requests/received -> find all the requests received 
+GET /connections -> find all the connections 
 GET /feed -> to get the profiles of the other users 
 
 

@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
+const userRouter = require("./routes/user");
 
 app.use(express.json()); // this will act aas a middleware fr all the requests req. for the parsing of the json requests coming in the body
 app.use(cookieParser());
@@ -12,6 +13,7 @@ app.use(cookieParser());
 app.use("/", authRouter); // router can be used as a middleware
 app.use("/", profileRouter);
 app.use("/", requestRouter);
+app.use("/", userRouter);
 
 connectDb()
   .then(() => {
