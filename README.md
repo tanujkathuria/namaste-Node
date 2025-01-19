@@ -33,6 +33,13 @@ POST /request/review/rejected/:requestId
 
 GET /requests/received -> find all the requests received 
 GET /connections -> find all the connections 
-GET /feed -> to get the profiles of the other users 
+GET /feed -> to get the profiles of the other users / can accept or reject those users 
 
+# pagination 
+
+/feed?page=1&limit=10 -> first 10 users .skip(0) & .limit(10)
+/feed?page=2&limit=10 -> 11 to 20 users .skip(10) & .limit(10)
+/feed?page=3&limit=10 -> 21 to 30 users .skip(20) & .limit(10)
+
+skip and limit functions can be used 
 

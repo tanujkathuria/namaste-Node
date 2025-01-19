@@ -35,7 +35,7 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
 // write down the api fr the forgot password scenario
 
 // fetch all the records from the database
-router.get("/feed", async (req, res) => {
+router.get("/findAllUsers", async (req, res) => {
   try {
     const users = await UserModel.find({});
 
