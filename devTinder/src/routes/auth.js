@@ -41,7 +41,7 @@ router.post("/login", async (req, res) => {
       const token = await user.getJWT();
       // add the token to cookie and send the response back to the user
       res.cookie("token", token);
-      res.send("login is successful");
+      res.send(user);
     } else throw new Error("invalid credentials");
   } catch (err) {
     res.status(400).send("error has occured" + err);

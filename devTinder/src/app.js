@@ -6,7 +6,15 @@ const authRouter = require("./routes/auth");
 const profileRouter = require("./routes/profile");
 const requestRouter = require("./routes/requests");
 const userRouter = require("./routes/user");
+const cors = require("cors");
 
+// need for the whitelisting the origin domain name
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json()); // this will act aas a middleware fr all the requests req. for the parsing of the json requests coming in the body
 app.use(cookieParser());
 
