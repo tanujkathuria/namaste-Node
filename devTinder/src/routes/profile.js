@@ -9,7 +9,7 @@ router.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user;
     if (!user) res.send("user does not exist");
-    res.send("profile successful " + user);
+    res.send(user);
   } catch (err) {
     res.status(400).send("error has occured" + err);
   }
