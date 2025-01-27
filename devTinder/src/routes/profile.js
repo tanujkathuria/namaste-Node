@@ -25,7 +25,10 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
     const user = req.user;
     Object.keys(req.body).forEach((field) => (user[field] = req.body[field])); // run for each of the keys
     await user.save();
-    res.send("user data has been updated successfully");
+    res.send({
+      message: "user data has been updated successfully",
+      data: user,
+    });
     if (!user) res.send("user does not exist");
   } catch (err) {
     res.status(400).send("error has occured" + err);
