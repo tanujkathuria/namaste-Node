@@ -81,13 +81,19 @@ router.post(
       if (!connectionRequest) {
         return res.status(400).send("this request id not valid");
       }
-      connectionRequest.status = "accepted";
+      connectionRequest.status =
+        status === "accepted" ? "accepted" : "rejected";
       console.log(connectionRequest);
       const data = await connectionRequest.save();
-      res.json({
-        message: "connection request has been accepted",
-        data: data,
-      });
+      status === "accepted"
+        ? res.json({
+            message: "connection request has been accepted",
+            data: data,
+          })
+        : res.json({
+            message: "connection request has been rejected",
+            data: data,
+          });
     } catch (err) {
       res.status(400).send("some error has occured" + err);
     }
